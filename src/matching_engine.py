@@ -51,11 +51,14 @@ class MatchingEngine:
         """Processes an order
 
         Args: order_dict, the defaultdict order from the parsed user input.
+        Returns: 
+            -Total Sale: Float if SUB
+            -0/1 if CXL
         """
         order = OrderFactory.create_order(order_dict["type"], order_dict)
 
         if order.action == "SUB":
-            order.execute(self.order_book)
+            return order.execute(self.order_book)
 
         if order.action == "CXL":
-            self.order_book.cancel_order(order.id)
+            return self.order_book.cancel_order(order.id)

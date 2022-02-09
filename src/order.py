@@ -84,9 +84,9 @@ class LimitOrder(Order):
             The total sale as float
         """
         if self.side == "B":
-            self._execute_buy_order(order_book)
-        elif self.side == "S":
-            self._execute_sell_order(order_book)
+            return self._execute_buy_order(order_book)
+        if self.side == "S":
+            return self._execute_sell_order(order_book)
 
     def _execute_buy_order(self, order_book):
         """Executes a buy limit order.
@@ -96,6 +96,8 @@ class LimitOrder(Order):
         Returns:
             The total sale as float
         """
+        # initialize total sale to 0.0
+        total_sale = 0.0
         # maintain a history of orders executed
         sell_orders = []
         # track the quantity remaining to buy
@@ -106,9 +108,13 @@ class LimitOrder(Order):
             if curr_sell_order.price > self.price:
                 break
             if curr_sell_order.quantity > buy_quantity:
-                # this will happen only when order gets complete, handle the residue
+                # this will happen only when buy order gets completed, handle the residue
+                total_sale += buy_quantity * curr_sell_order.price
                 curr_sell_order.quantity -= buy_quantity
                 order_book.push_to_sell_queue(curr_sell_order)
+            else:
+                # buy quantity still left, curr_sell_order is completely executed
+                total_sale += curr_sell_order.quantity * curr_sell_order.price
 
             # update buy quantity
             buy_quantity -= min(buy_quantity, curr_sell_order.quantity)
@@ -120,6 +126,10 @@ class LimitOrder(Order):
                 order_book.push_to_sell_queue(order)
             # add the current order to queue
             order_book.push_to_buy_queue(self)
+            # reset total_sale
+            total_sale = 0.0
+
+        return total_sale
 
     def _execute_sell_order(self, order_book):
         """Executes a sell limit order.
@@ -129,6 +139,8 @@ class LimitOrder(Order):
         Returns:
             The total sale as float
         """
+        # initialize total sale to 0.0
+        total_sale = 0.0
         # maintain a history of orders executed
         buy_orders = []
         # track the quantity remaining to sell
@@ -139,9 +151,13 @@ class LimitOrder(Order):
             if curr_buy_order.price < self.price:
                 break
             if curr_buy_order.quantity > sell_quantity:
-                # this will happen only when order gets complete, handle the residue
+                # this will happen only when sell order gets completed, handle the residue
+                total_sale += sell_quantity * curr_buy_order.price
                 curr_buy_order.quantity -= sell_quantity
                 order_book.push_to_buy_queue(curr_buy_order)
+            else:
+                # sell quantity still left, curr_buy_order is completely executed
+                total_sale += curr_buy_order.quantity * curr_buy_order.price
 
             # update sell quantity
             sell_quantity -= min(sell_quantity, curr_buy_order.quantity)
@@ -154,3 +170,7 @@ class LimitOrder(Order):
                 order_book.push_to_buy_queue(order)
             # add the current order to queue
             order_book.push_to_sell_queue(self)
+            # reset total_sale
+            total_sale = 0.0
+
+        return total_sale

@@ -58,6 +58,9 @@ class OrderBook:
 
         Args:
             order_id: uid of order
+        Returns:
+            1: Deletion successful
+            0: Order not found.
         """
         for idx, order in enumerate(self.sell):
             if order.uid == order_id:
@@ -65,10 +68,13 @@ class OrderBook:
                 self.sell.pop()
                 heapq.heappop(self.sell)
                 # return at this point, no need to check buy queue
-                return
+                return 1
 
         for idx, order in enumerate(self.buy):
             if order.uid == order_id:
                 self.buy[idx] = self.buy[-1]
                 self.buy.pop()
                 heapq.heappop(self.buy)
+                return 1
+
+        return 0

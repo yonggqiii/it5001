@@ -48,4 +48,4 @@ if __name__ == "__main__":
             break
 
         order_dict = parse_order(line)
-        matching_engine.process_order(order_dict)
+        print(matching_engine.process_order(order_dict))
