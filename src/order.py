@@ -110,6 +110,7 @@ class LimitOrder(Order):
         while order_book.sell and buy_quantity > 0:
             curr_sell_order = order_book.pop_sell()
             if curr_sell_order.price > self.price:
+                sell_orders.append(curr_sell_order)
                 break
             if (
                 curr_sell_order.type in MANDATED_FULL_EXECUTION_ORDERS
@@ -166,6 +167,7 @@ class LimitOrder(Order):
         while order_book.buy and sell_quantity > 0:
             curr_buy_order = order_book.pop_buy()
             if curr_buy_order.price < self.price:
+                buy_orders.append(curr_buy_order)
                 break
             if (
                 curr_buy_order.type in MANDATED_FULL_EXECUTION_ORDERS
@@ -198,7 +200,7 @@ class LimitOrder(Order):
 
         # restore mandated full execution orders
         for order in full_execution_orders:
-            order_book.push_to_sell_queue(order)
+            order_book.push_to_buy_queue(order)
 
         return total_sale
 
@@ -312,7 +314,7 @@ class MarketOrder(Order):
 
         # restore mandated full execution orders
         for order in full_execution_orders:
-            order_book.push_to_sell_queue(order)
+            order_book.push_to_buy_queue(order)
 
         return total_sale
 
@@ -364,6 +366,7 @@ class IOCOrder(Order):
         while order_book.sell and buy_quantity > 0:
             curr_sell_order = order_book.pop_sell()
             if curr_sell_order.price > self.price:
+                order_book.push_to_sell_queue(curr_sell_order)
                 break
             if (
                 curr_sell_order.type in MANDATED_FULL_EXECUTION_ORDERS
@@ -408,6 +411,7 @@ class IOCOrder(Order):
         while order_book.buy and sell_quantity > 0:
             curr_buy_order = order_book.pop_buy()
             if curr_buy_order.price < self.price:
+                order_book.push_to_buy_queue(curr_buy_order)
                 break
             if (
                 curr_buy_order.type in MANDATED_FULL_EXECUTION_ORDERS
@@ -430,7 +434,7 @@ class IOCOrder(Order):
 
         # restore mandated full execution orders
         for order in full_execution_orders:
-            order_book.push_to_sell_queue(order)
+            order_book.push_to_buy_queue(order)
 
         return total_sale
 
@@ -486,6 +490,7 @@ class FOKOrder(Order):
         while order_book.sell and buy_quantity > 0:
             curr_sell_order = order_book.pop_sell()
             if curr_sell_order.price > self.price:
+                sell_orders.append(curr_sell_order)
                 break
             if (
                 curr_sell_order.type in MANDATED_FULL_EXECUTION_ORDERS
@@ -540,6 +545,7 @@ class FOKOrder(Order):
         while order_book.buy and sell_quantity > 0:
             curr_buy_order = order_book.pop_buy()
             if curr_buy_order.price < self.price:
+                buy_orders.append(curr_buy_order)
                 break
             if (
                 curr_buy_order.type in MANDATED_FULL_EXECUTION_ORDERS
@@ -570,7 +576,7 @@ class FOKOrder(Order):
 
         # restore mandated full execution orders
         for order in full_execution_orders:
-            order_book.push_to_sell_queue(order)
+            order_book.push_to_buy_queue(order)
 
         return total_sale
 
@@ -624,6 +630,7 @@ class GTCOrder(Order):
         while order_book.sell and buy_quantity > 0:
             curr_sell_order = order_book.pop_sell()
             if curr_sell_order.price > self.price:
+                order_book.push_to_sell_queue(curr_sell_order)
                 break
             if (
                 curr_sell_order.type in MANDATED_FULL_EXECUTION_ORDERS
@@ -674,6 +681,7 @@ class GTCOrder(Order):
         while order_book.buy and sell_quantity > 0:
             curr_buy_order = order_book.pop_buy()
             if curr_buy_order.price < self.price:
+                order_book.push_to_buy_queue(curr_buy_order)
                 break
             if (
                 curr_buy_order.type in MANDATED_FULL_EXECUTION_ORDERS
@@ -702,6 +710,6 @@ class GTCOrder(Order):
 
         # restore mandated full execution orders
         for order in full_execution_orders:
-            order_book.push_to_sell_queue(order)
+            order_book.push_to_buy_queue(order)
 
         return total_sale

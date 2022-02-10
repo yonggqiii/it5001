@@ -26,7 +26,7 @@ class OrderBook:
     def __str__(self):
         """returns string representation of the object"""
         buy_str = f"BUY Queue: [{', '.join(list(map(str, [buyorder[1] for buyorder in self.buy])))}]"
-        sell_str = f"SELL Queue: [{''.join(list(map(str, [sellorder[1] for sellorder in self.sell])))}]"
+        sell_str = f"SELL Queue: [{', '.join(list(map(str, [sellorder[1] for sellorder in self.sell])))}]"
         return buy_str + "\n" + sell_str
 
     def push_to_buy_queue(self, order):

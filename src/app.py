@@ -46,6 +46,9 @@ if __name__ == "__main__":
         if line == "END":
             print(matching_engine.order_book)
             break
+        if line == "ORDER":
+            print(matching_engine.order_book)
+            continue
 
         order_dict = parse_order(line)
         print(matching_engine.process_order(order_dict))
