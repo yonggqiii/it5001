@@ -51,7 +51,7 @@ class MatchingEngine:
         """Processes an order
 
         Args: order_dict, the defaultdict order from the parsed user input.
-        Returns: 
+        Returns:
             -Total Sale: Float if SUB
             -0/1 if CXL
         """
