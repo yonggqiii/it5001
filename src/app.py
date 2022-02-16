@@ -46,7 +46,7 @@ if __name__ == "__main__":
         if line == "END":
             print(matching_engine.order_book)
             break
-        if line == "ORDER":
+        if line == "ODR":
             print(matching_engine.order_book)
             continue
 
