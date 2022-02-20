@@ -55,10 +55,13 @@ class MatchingEngine:
             -Total Sale: Float if SUB
             -0/1 if CXL
         """
+
+        if order_dict['action'] == "CXL":
+            return self.order_book.cancel_order(order_dict['id'])
+
         order = OrderFactory.create_order(order_dict["type"], order_dict)
 
         if order.action == "SUB":
             return order.execute(self.order_book)
 
-        if order.action == "CXL":
-            return self.order_book.cancel_order(order.id)
+        

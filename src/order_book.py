@@ -63,18 +63,16 @@ class OrderBook:
             0: Order not found.
         """
         for idx, order in enumerate(self.sell):
-            if order.uid == order_id:
+            if order[1].uid == order_id:
                 self.sell[idx] = self.sell[-1]
                 self.sell.pop()
-                heapq.heappop(self.sell)
                 # return at this point, no need to check buy queue
                 return 1
 
         for idx, order in enumerate(self.buy):
-            if order.uid == order_id:
+            if order[1].uid == order_id:
                 self.buy[idx] = self.buy[-1]
                 self.buy.pop()
-                heapq.heappop(self.buy)
                 return 1
 
         return 0
