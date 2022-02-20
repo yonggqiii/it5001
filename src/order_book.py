@@ -66,6 +66,7 @@ class OrderBook:
             if order[1].uid == order_id:
                 self.sell[idx] = self.sell[-1]
                 self.sell.pop()
+                heapq.heapify(self.sell)
                 # return at this point, no need to check buy queue
                 return 1
 
@@ -73,6 +74,7 @@ class OrderBook:
             if order[1].uid == order_id:
                 self.buy[idx] = self.buy[-1]
                 self.buy.pop()
+                heapq.heapify(self.buy)
                 return 1
 
         return 0
