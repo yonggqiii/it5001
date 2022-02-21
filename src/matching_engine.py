@@ -21,8 +21,8 @@ class MatchingEngine:
 
     __instance = None
 
-    @staticmethod
-    def get_instance():
+    @classmethod
+    def get_instance(cls):
         """creates a singleton instance of MatchingEngine
 
         Args: None
