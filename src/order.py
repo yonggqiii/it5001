@@ -219,7 +219,8 @@ class MarketOrder(Order):
     """
 
     def __str__(self):
-        return f"({self.uid} {self.type} {self.side} {self.quantity})"
+        #TODO
+        pass
 
     def execute(self, order_book):
         """Executes a Market Order
@@ -229,10 +230,8 @@ class MarketOrder(Order):
         Returns:
             The total sale as float
         """
-        if self.side == "B":
-            return self._execute_buy_order(order_book)
-        if self.side == "S":
-            return self._execute_sell_order(order_book)
+        #TODO
+        pass
 
     def _execute_buy_order(self, order_book):
         """Executes a buy market order.
@@ -242,40 +241,8 @@ class MarketOrder(Order):
         Returns:
             The total sale as float
         """
-        # initialize total sale to 0.0
-        total_sale = 0.0
-        # track the quantity remaining to buy
-        buy_quantity = self.quantity
-        # maintain a list of skipped mandated full execution
-        full_execution_orders = []
-
-        while order_book.sell and buy_quantity > 0:
-            curr_sell_order = order_book.pop_sell()
-            if (
-                curr_sell_order.type in MANDATED_FULL_EXECUTION_ORDERS
-                and curr_sell_order.quantity > buy_quantity
-            ):
-                # add to full execution orders
-                full_execution_orders.append(curr_sell_order)
-                continue
-            if curr_sell_order.quantity > buy_quantity:
-                # this will happen only when buy order gets completed, handle the residue
-                total_sale += buy_quantity * curr_sell_order.price
-                curr_sell_order.quantity -= buy_quantity
-                order_book.push_to_sell_queue(curr_sell_order)
-            else:
-                # buy quantity still left, curr_sell_order is completely executed
-                total_sale += curr_sell_order.quantity * curr_sell_order.price
-
-            # update buy quantity
-            buy_quantity -= min(buy_quantity, curr_sell_order.quantity)
-
-        # restore mandated full execution orders
-        for order in full_execution_orders:
-            order_book.push_to_sell_queue(order)
-
-        return total_sale
-
+        #TODO
+        pass
     def _execute_sell_order(self, order_book):
         """Executes a sell market order.
 
@@ -284,40 +251,8 @@ class MarketOrder(Order):
         Returns:
             The total sale as float
         """
-        # initialize total sale to 0.0
-        total_sale = 0.0
-        # track the quantity remaining to sell
-        sell_quantity = self.quantity
-        # maintain a list of skipped mandated full execution
-        full_execution_orders = []
-
-        while order_book.buy and sell_quantity > 0:
-            curr_buy_order = order_book.pop_buy()
-            if (
-                curr_buy_order.type in MANDATED_FULL_EXECUTION_ORDERS
-                and curr_buy_order.quantity > sell_quantity
-            ):
-                # add to full execution orders
-                full_execution_orders.append(curr_buy_order)
-                continue
-            if curr_buy_order.quantity > sell_quantity:
-                # this will happen only when sell order gets completed, handle the residue
-                total_sale += sell_quantity * curr_buy_order.price
-                curr_buy_order.quantity -= sell_quantity
-                order_book.push_to_buy_queue(curr_buy_order)
-            else:
-                # sell quantity still left, curr_buy_order is completely executed
-                total_sale += curr_buy_order.quantity * curr_buy_order.price
-
-            # update sell quantity
-            sell_quantity -= min(sell_quantity, curr_buy_order.quantity)
-
-        # restore mandated full execution orders
-        for order in full_execution_orders:
-            order_book.push_to_buy_queue(order)
-
-        return total_sale
-
+        #TODO
+        pass
 
 class IOCOrder(Order):
     """Defines a IOC Order which is an Order type.
@@ -333,7 +268,8 @@ class IOCOrder(Order):
     """
 
     def __str__(self):
-        return f"({self.uid} {self.type} {self.side} {self.quantity} {self.price})"
+        #TODO
+        pass
 
     def execute(self, order_book):
         """Executes an IOC Order
@@ -343,10 +279,8 @@ class IOCOrder(Order):
         Returns:
             The total sale as float
         """
-        if self.side == "B":
-            return self._execute_buy_order(order_book)
-        if self.side == "S":
-            return self._execute_sell_order(order_book)
+        #TODO
+        pass
 
     def _execute_buy_order(self, order_book):
         """Executes a buy IOC order.
@@ -356,42 +290,8 @@ class IOCOrder(Order):
         Returns:
             The total sale as float
         """
-        # initialize total sale to 0.0
-        total_sale = 0.0
-        # track the quantity remaining to buy
-        buy_quantity = self.quantity
-        # maintain a list of skipped mandated full execution
-        full_execution_orders = []
-
-        while order_book.sell and buy_quantity > 0:
-            curr_sell_order = order_book.pop_sell()
-            if curr_sell_order.price > self.price:
-                order_book.push_to_sell_queue(curr_sell_order)
-                break
-            if (
-                curr_sell_order.type in MANDATED_FULL_EXECUTION_ORDERS
-                and curr_sell_order.quantity > buy_quantity
-            ):
-                # add to full execution orders
-                full_execution_orders.append(curr_sell_order)
-                continue
-            if curr_sell_order.quantity > buy_quantity:
-                # this will happen only when buy order gets completed, handle the residue
-                total_sale += buy_quantity * curr_sell_order.price
-                curr_sell_order.quantity -= buy_quantity
-                order_book.push_to_sell_queue(curr_sell_order)
-            else:
-                # buy quantity still left, curr_sell_order is completely executed
-                total_sale += curr_sell_order.quantity * curr_sell_order.price
-
-            # update buy quantity
-            buy_quantity -= min(buy_quantity, curr_sell_order.quantity)
-
-        # restore mandated full execution orders
-        for order in full_execution_orders:
-            order_book.push_to_sell_queue(order)
-
-        return total_sale
+        #TODO
+        pass
 
     def _execute_sell_order(self, order_book):
         """Executes a sell IOC order.
@@ -401,43 +301,8 @@ class IOCOrder(Order):
         Returns:
             The total sale as float
         """
-        # initialize total sale to 0.0
-        total_sale = 0.0
-        # track the quantity remaining to sell
-        sell_quantity = self.quantity
-        # maintain a list of skipped mandated full execution
-        full_execution_orders = []
-
-        while order_book.buy and sell_quantity > 0:
-            curr_buy_order = order_book.pop_buy()
-            if curr_buy_order.price < self.price:
-                order_book.push_to_buy_queue(curr_buy_order)
-                break
-            if (
-                curr_buy_order.type in MANDATED_FULL_EXECUTION_ORDERS
-                and curr_buy_order.quantity > sell_quantity
-            ):
-                # add to full execution orders
-                full_execution_orders.append(curr_buy_order)
-                continue
-            if curr_buy_order.quantity > sell_quantity:
-                # this will happen only when sell order gets completed, handle the residue
-                total_sale += sell_quantity * curr_buy_order.price
-                curr_buy_order.quantity -= sell_quantity
-                order_book.push_to_buy_queue(curr_buy_order)
-            else:
-                # sell quantity still left, curr_buy_order is completely executed
-                total_sale += curr_buy_order.quantity * curr_buy_order.price
-
-            # update sell quantity
-            sell_quantity -= min(sell_quantity, curr_buy_order.quantity)
-
-        # restore mandated full execution orders
-        for order in full_execution_orders:
-            order_book.push_to_buy_queue(order)
-
-        return total_sale
-
+        #TODO
+        pass
 
 class FOKOrder(Order):
     """Defines a FOK Order which is an Order type.
@@ -455,7 +320,8 @@ class FOKOrder(Order):
     """
 
     def __str__(self):
-        return f"({self.uid} {self.type} {self.side} {self.quantity} {self.price})"
+        #TODO
+        pass
 
     def execute(self, order_book):
         """Executes a FOK Order
@@ -465,10 +331,8 @@ class FOKOrder(Order):
         Returns:
             The total sale as float
         """
-        if self.side == "B":
-            return self._execute_buy_order(order_book)
-        if self.side == "S":
-            return self._execute_sell_order(order_book)
+        #TODO
+        pass
 
     def _execute_buy_order(self, order_book):
         """Executes a buy FOK order.
@@ -478,52 +342,8 @@ class FOKOrder(Order):
         Returns:
             The total sale as float
         """
-        # initialize total sale to 0.0
-        total_sale = 0.0
-        # maintain a history of orders executed
-        sell_orders = []
-        # maintain a list of skipped mandated full execution
-        full_execution_orders = []
-        # track the quantity remaining to buy
-        buy_quantity = self.quantity
-
-        while order_book.sell and buy_quantity > 0:
-            curr_sell_order = order_book.pop_sell()
-            if curr_sell_order.price > self.price:
-                sell_orders.append(curr_sell_order)
-                break
-            if (
-                curr_sell_order.type in MANDATED_FULL_EXECUTION_ORDERS
-                and curr_sell_order.quantity > buy_quantity
-            ):
-                # add to full execution orders
-                full_execution_orders.append(curr_sell_order)
-                continue
-            if curr_sell_order.quantity > buy_quantity:
-                # this will happen only when buy order gets completed, handle the residue
-                total_sale += buy_quantity * curr_sell_order.price
-                curr_sell_order.quantity -= buy_quantity
-                order_book.push_to_sell_queue(curr_sell_order)
-            else:
-                # buy quantity still left, curr_sell_order is completely executed
-                total_sale += curr_sell_order.quantity * curr_sell_order.price
-
-            # update buy quantity
-            buy_quantity -= min(buy_quantity, curr_sell_order.quantity)
-            sell_orders.append(curr_sell_order)
-
-        if buy_quantity > 0:
-            # restore the orders
-            for order in reversed(sell_orders):
-                order_book.push_to_sell_queue(order)
-            # reset total_sale
-            total_sale = 0.0
-
-        # restore mandated full execution orders
-        for order in full_execution_orders:
-            order_book.push_to_sell_queue(order)
-
-        return total_sale
+        #TODO
+        pass
 
     def _execute_sell_order(self, order_book):
         """Executes a sell FOK order.
@@ -533,53 +353,8 @@ class FOKOrder(Order):
         Returns:
             The total sale as float
         """
-        # initialize total sale to 0.0
-        total_sale = 0.0
-        # maintain a history of orders executed
-        buy_orders = []
-        # maintain a list of skipped mandated full execution
-        full_execution_orders = []
-        # track the quantity remaining to sell
-        sell_quantity = self.quantity
-
-        while order_book.buy and sell_quantity > 0:
-            curr_buy_order = order_book.pop_buy()
-            if curr_buy_order.price < self.price:
-                buy_orders.append(curr_buy_order)
-                break
-            if (
-                curr_buy_order.type in MANDATED_FULL_EXECUTION_ORDERS
-                and curr_buy_order.quantity > sell_quantity
-            ):
-                # add to full execution orders
-                full_execution_orders.append(curr_buy_order)
-                continue
-            if curr_buy_order.quantity > sell_quantity:
-                # this will happen only when sell order gets completed, handle the residue
-                total_sale += sell_quantity * curr_buy_order.price
-                curr_buy_order.quantity -= sell_quantity
-                order_book.push_to_buy_queue(curr_buy_order)
-            else:
-                # sell quantity still left, curr_buy_order is completely executed
-                total_sale += curr_buy_order.quantity * curr_buy_order.price
-
-            # update sell quantity
-            sell_quantity -= min(sell_quantity, curr_buy_order.quantity)
-            buy_orders.append(curr_buy_order)
-
-        if sell_quantity > 0:
-            # restore the orders
-            for order in reversed(buy_orders):
-                order_book.push_to_buy_queue(order)
-            # reset total_sale
-            total_sale = 0.0
-
-        # restore mandated full execution orders
-        for order in full_execution_orders:
-            order_book.push_to_buy_queue(order)
-
-        return total_sale
-
+        #TODO
+        pass
 
 class GTCOrder(Order):
     """Defines a GTC Order which is an Order type.
@@ -597,20 +372,12 @@ class GTCOrder(Order):
     """
 
     def __str__(self):
-        return f"({self.uid} {self.type} {self.side} {self.quantity} {self.price})"
+        #TODO
+        pass
 
     def execute(self, order_book):
-        """Executes a GTC Order
-
-        Args:
-            order_book: OrderBook object to manage the buy/sell queue.
-        Returns:
-            The total sale as float
-        """
-        if self.side == "B":
-            return self._execute_buy_order(order_book)
-        if self.side == "S":
-            return self._execute_sell_order(order_book)
+        #TODO
+        pass
 
     def _execute_buy_order(self, order_book):
         """Executes a GTC limit order.
@@ -620,48 +387,8 @@ class GTCOrder(Order):
         Returns:
             The total sale as float
         """
-        # initialize total sale to 0.0
-        total_sale = 0.0
-        # track the quantity remaining to buy
-        buy_quantity = self.quantity
-        # maintain a list of skipped mandated full execution
-        full_execution_orders = []
-
-        while order_book.sell and buy_quantity > 0:
-            curr_sell_order = order_book.pop_sell()
-            if curr_sell_order.price > self.price:
-                order_book.push_to_sell_queue(curr_sell_order)
-                break
-            if (
-                curr_sell_order.type in MANDATED_FULL_EXECUTION_ORDERS
-                and curr_sell_order.quantity > buy_quantity
-            ):
-                # add to full execution orders
-                full_execution_orders.append(curr_sell_order)
-                continue
-            if curr_sell_order.quantity > buy_quantity:
-                # this will happen only when buy order gets completed, handle the residue
-                total_sale += buy_quantity * curr_sell_order.price
-                curr_sell_order.quantity -= buy_quantity
-                order_book.push_to_sell_queue(curr_sell_order)
-            else:
-                # buy quantity still left, curr_sell_order is completely executed
-                total_sale += curr_sell_order.quantity * curr_sell_order.price
-
-            # update buy quantity
-            buy_quantity -= min(buy_quantity, curr_sell_order.quantity)
-
-        if buy_quantity > 0:
-            # update the remaining quantity
-            self.quantity = buy_quantity
-            # push to buy queue
-            order_book.push_to_buy_queue(self)
-
-        # restore mandated full execution orders
-        for order in full_execution_orders:
-            order_book.push_to_sell_queue(order)
-
-        return total_sale
+        #TODO
+        pass
 
     def _execute_sell_order(self, order_book):
         """Executes a sell GTC order.
@@ -671,45 +398,5 @@ class GTCOrder(Order):
         Returns:
             The total sale as float
         """
-        # initialize total sale to 0.0
-        total_sale = 0.0
-        # track the quantity remaining to sell
-        sell_quantity = self.quantity
-        # maintain a list of skipped mandated full execution
-        full_execution_orders = []
-
-        while order_book.buy and sell_quantity > 0:
-            curr_buy_order = order_book.pop_buy()
-            if curr_buy_order.price < self.price:
-                order_book.push_to_buy_queue(curr_buy_order)
-                break
-            if (
-                curr_buy_order.type in MANDATED_FULL_EXECUTION_ORDERS
-                and curr_buy_order.quantity > sell_quantity
-            ):
-                # add to full execution orders
-                full_execution_orders.append(curr_buy_order)
-                continue
-            if curr_buy_order.quantity > sell_quantity:
-                # this will happen only when sell order gets completed, handle the residue
-                total_sale += sell_quantity * curr_buy_order.price
-                curr_buy_order.quantity -= sell_quantity
-                order_book.push_to_buy_queue(curr_buy_order)
-            else:
-                # sell quantity still left, curr_buy_order is completely executed
-                total_sale += curr_buy_order.quantity * curr_buy_order.price
-
-            # update sell quantity
-            sell_quantity -= min(sell_quantity, curr_buy_order.quantity)
-
-        if sell_quantity > 0:
-            # update the remaining quantity
-            self.quantity = sell_quantity
-            # add the current order to queue
-            order_book.push_to_sell_queue(self)
-
-        # restore mandated full execution orders
-        for order in full_execution_orders:
-            order_book.push_to_buy_queue(order)
-
-        return total_sale
+        #TODO
+        pass

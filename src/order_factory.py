@@ -17,11 +17,7 @@ class OrderFactory:
     """
 
     submit_orders = {
-        "LO": LimitOrder,
-        "MO": MarketOrder,
-        "IOC": IOCOrder,
-        "FOK": FOKOrder,
-        "GTC": GTCOrder,
+        "LO": LimitOrder
     }
 
     @classmethod
